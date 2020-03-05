@@ -45,12 +45,7 @@
           $user.text(tweet.user);
           $user.click(function() {
             $userTweets = $('<div></div>');
-            var text = tweet.user + ': '
-            for (var i = streams.users[tweet.user].length - 1; i >= 0; i--) {
-              text += streams.users[tweet.user][i].message + ', ';
-              //alert(streams.users[user]);
-            }
-            $userTweets.text(text);
+            $userTweets.text(tweet.user + ': ' + JSON.stringify(streams.users[tweet.user]));
             $userTweets.appendTo($body);
           });
           $user.appendTo($body);
