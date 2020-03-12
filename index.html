@@ -27,39 +27,50 @@
     <h1>Twitter <img src="https://static01.nyt.com/images/2014/08/10/magazine/10wmt/10wmt-jumbo-v4.jpg?quality=90&auto=webp" alt="Twitter logo" style="width:50px"></h1>
     <p >Tweets</p>
     <img></img>
-    <button onclick="loadTweets()">See more tweets</button>
+    <!--<button onclick="loadTweets()"></button> does not work for some reason-->
+    <button>See more tweets</button>
     <script>
-      //$(document).ready(function myFunction(){ ... });
-
-      function loadTweets(){
+      $(document).ready(function(){ 
         var $body = $('body');
-        //$body.html(''); //don't clear out body once button is clicked
-        var index = streams.home.length - 1;
-        while(index >= 0){
-          var tweet = streams.home[index];
-          //var user = tweet.user; //me
-          var $tweet = $('<div></div>');
-          $tweet.text('@' + tweet.user + ': ' + tweet.message + ' ' + tweet.created_at.toLocaleString());
-          $tweet.appendTo($body);
-          var $user = $('<a></a>');
-          $user.text(tweet.user);
-          $user.click(function() {
-            $userTweets = $('<div></div>');
-            $userTweets.text(tweet.user + ': ' + JSON.stringify(streams.users[tweet.user]));
-            $userTweets.appendTo($body);
-          });
-          $user.appendTo($body);
-          index -= 1;
-        }
-      }  
+        var $tweets = $('<div></div>');
+        $tweets.appendTo($body);
 
-      //Allow the user to click on a username to see that user's timeline.
-      /** 
-       * $tweet.user.click(function() {
-            alert( "Handler for .click() called." );
+        function renderTweet(tweet) {
+          var $tweet = $('<div></div>');
+          //user, message, created_at = keys of each tweet object
+          $tweet.append('@' + '<a class="user">' + tweet.user + '</a>' + ': ' + tweet.message + ' ' + tweet.created_at.toLocaleString());
+          $tweet.appendTo($tweets);
+        }
+
+        //streams.home = array of all tweets from users you're following
+
+        //use "" for tags
+        //$("button").click(loadTweets(streams.home));
+        $("button").on('click', function(event) {
+          loadTweets(streams.home);
+        });
+        
+        function loadTweets(tweets){
+          $tweets.html(''); //clears tweets after each click
+          var index = tweets.length - 1;
+          while(index >= 0){
+            var tweet = tweets[index];
+            renderTweet(tweet);
+            index -= 1;
+          }
+
+          //use . for class (# for id)
+          $('.user').on('click', function(event) {
+            displayUserTimeline(event.target.text);
           });
-          */
-      
+
+        }
+
+        function displayUserTimeline(user) {
+          loadTweets(streams.users[user]);
+        }
+        
+      });
       
     </script>
   </body>
